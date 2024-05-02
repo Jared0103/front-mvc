@@ -1,5 +1,5 @@
 <template>
-  <login-user />
+  <login-user @evento="evento" />
 </template>
 
 <script>
@@ -10,6 +10,11 @@ export default {
   components: {
     LoginUser
   },
-  layout: 'login'
+  layout: 'login',
+  methods: {
+    evento (data) {
+      this.$nuxt.$emit('evento', data)
+    }
+  }
 }
 </script>

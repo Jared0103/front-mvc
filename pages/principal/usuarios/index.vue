@@ -24,7 +24,7 @@
               </v-btn>
             </v-col>
             <v-col cols="6">
-              <v-btn icon color="warning" @click="actualizarUsuario(item)">
+              <v-btn icon color="warning" @click="actualizarUsuario(item.id)">
                 <v-icon>mdi-account-edit</v-icon>
               </v-btn>
             </v-col>
@@ -87,12 +87,40 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="showUpdate" width="400" persistent>
+      <v-card>
+        <v-card-title>Modificar Usuario</v-card-title>
+        <v-card-text>
+          <v-form ref="formUpdate" v-model="validFormUpdate">
+            <!-- Campo de correo electrónico -->
+            <v-text-field v-model="userToUpdate.email" placeholder="Escribe tu correo" type="email" :rules="correo" />
+            <!-- Campo de contraseña -->
+            <v-text-field v-model="userToUpdate.password" placeholder="Escribe tu contraseña" type="password" :rules="password" />
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-row>
+            <v-col cols="6">
+              <v-btn block color="primary" @click="modificar">
+                <span class="white--text">Modificar</span>
+              </v-btn>
+            </v-col>
+            <v-col cols="6">
+              <v-btn block color="red" @click="showUpdate = false">
+                <span class="white--text">Cancelar</span>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-col>
 </template>
 
 <script>
 import { v4 as uuidv4 } from 'uuid'
 export default {
+  layout: 'default',
   data () {
     return {
       headers: [
@@ -113,7 +141,10 @@ export default {
       ],
       correo: [
         v => /.+@.+\..+/.test(v) || 'El correo electrónico debe ser válido'
-      ]
+      ],
+      showUpdate: false,
+      userToUpdate: {},
+      validFormUpdate: false
     }
   },
   mounted () {
@@ -152,6 +183,11 @@ export default {
         .then((res) => {
           console.log('@@ res => ', res)
           if (res.data.message === 'User deleted successfully') {
+            this.$nuxt.$emit('evento', {
+              message: res.data.message,
+              color: 'red',
+              type: 'error'
+            })
             this.getAllUsers()
             this.showDelete = false
           }
@@ -174,12 +210,54 @@ export default {
           .then((res) => {
             console.log('@@ res => ', res)
             if (res.data.message === 'Usuario registrado satisfactoriamente') {
+              this.$nuxt.$emit('evento', {
+                message: res.data.message,
+                color: 'green',
+                type: 'success',
+                time: 2000
+              })
               this.getAllUsers()
               this.showNuevo = false
             }
           })
           .catch((err) => {
-            console.log('@@@ err => ', err)
+            console.log('🚀 ~ agregar ~ err: ', err)
+          })
+      } else {
+        alert('Faltan Datos')
+      }
+    },
+    actualizarUsuario (id) {
+      this.userToUpdate = this.usuarios.find(user => user.id === id)
+      this.showUpdate = true
+    },
+    modificar () {
+      this.validFormUpdate = this.$refs.formUpdate.validate()
+      if (this.validFormUpdate) {
+        const sendData = {
+          id: this.userToUpdate.id,
+          email: this.userToUpdate.email,
+          password: this.userToUpdate.password
+        }
+        console.log('🚀 ~ modificar ~ sendData:', sendData)
+        this.$axios.defaults.headers.common.Authorization = `Bearer ${this.token}`
+        const url = `/update-user/${sendData.id}`
+        this.$axios.put(url, sendData)
+          .then((res) => {
+            console.log('@@ res => ', res)
+            if (res.data.message === 'User update successfully') {
+              this.$nuxt.$emit('evento', {
+                message: res.data.message,
+                color: 'warning',
+                type: 'success',
+                time: 3000
+              })
+              this.getAllUsers()
+              this.showUpdate = false
+            }
+          })
+          .catch((err) => {
+            console.log('🚀 ~ agregar ~ err: ', err)
           })
       } else {
         alert('Faltan Datos')

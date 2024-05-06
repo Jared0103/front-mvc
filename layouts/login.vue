@@ -30,7 +30,7 @@ export default {
   },
   created () {
     this.$nuxt.$on('evento', (data) => {
-      console.log('@@@ data login => ', data)
+      console.log('🚀 ~ this.$nuxt.$on ~ evento:', data)
       this.mensaje = data.message
       this.color = data.color
       this.type = data.type

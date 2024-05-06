@@ -54,6 +54,13 @@
 
     <!-- Contenido principal -->
     <v-main>
+      <ui-alert
+        v-if="showAlert"
+        :message="mensaje"
+        :color="color"
+        :type="type"
+        style="z-index: 10!important; top: -60px!important"
+      />
       <v-container fluid>
         <Nuxt />
       </v-container>
@@ -85,8 +92,24 @@ export default {
         }
       ],
       miniVariant: false,
-      title: 'CRUD con Firebase y Nuxt.js'
+      title: 'CRUD con Firebase y Nuxt.js',
+      showAlert: false,
+      mensaje: '',
+      color: '',
+      type: ''
     }
+  },
+  created () {
+    this.$nuxt.$on('evento', (data) => {
+      console.log('🚀 ~ this.$nuxt.$on ~ evento:', data)
+      this.mensaje = data.message
+      this.color = data.color
+      this.type = data.type
+      this.showAlert = true
+      setTimeout(() => {
+        this.showAlert = false
+      }, data.time || 4000)
+    })
   }
 }
 </script>

@@ -107,6 +107,13 @@ export default {
               }
             })
             .catch((err) => {
+              const errorMessage = err.response?.data?.message || 'Error'
+              this.$nuxt.$emit('evento', {
+                message: errorMessage,
+                color: 'red',
+                type: 'error',
+                time: 2000
+              })
               console.error('@@ err => : ', err)
             })
         } else {
@@ -140,7 +147,12 @@ export default {
             }
           })
           .catch((err) => {
-            console.log('@@@ err => ', err)
+            this.$emit('evento', {
+              message: 'Algo Salio Mal',
+              color: 'red',
+              type: 'error'
+            })
+            console.log('🚀 ~ agregar ~ err: ', err)
           })
       } else {
         alert('Faltan Datos')

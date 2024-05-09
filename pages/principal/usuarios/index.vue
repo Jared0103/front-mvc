@@ -62,23 +62,67 @@
     <!-- Diálogo para registrar un nuevo usuario -->
     <v-dialog v-model="showNuevo" width="400" persistent>
       <v-card>
-        <v-card-title>Registrar Usuario</v-card-title>
+        <v-card-title class="headline font-weight-bold grey--text text--darken-1">
+          Registrar Usuario
+        </v-card-title>
         <v-card-text>
-          <v-form ref="form" v-model="validForm">
+          <v-form ref="formNuevo" v-model="validFormNuevo">
             <!-- Campo de correo electrónico -->
-            <v-text-field v-model="email" placeholder="Escribe tu correo" type="email" :rules="correo" />
+            <v-text-field
+              v-model="emailNuevo"
+              label="Email"
+              placeholder="Escribe tu correo"
+              type="email"
+              :rules="correo"
+              outlined
+            />
             <!-- Campo de contraseña -->
-            <v-text-field v-model="passwordUser" placeholder="Escribe tu contraseña" type="password" :rules="password" />
+            <v-text-field
+              v-model="passwordUserNuevo"
+              label="Password"
+              placeholder="Escribe tu contraseña"
+              type="password"
+              :rules="password"
+              outlined
+            />
+            <!-- Agregar campos adicionales -->
+            <v-row>
+              <v-col cols="6">
+                <v-text-field v-model="nombreNuevo" label="Nombre" placeholder="Escribe tu nombre" outlined />
+              </v-col>
+              <v-col cols="6">
+                <v-text-field v-model="apellidoPaternoNuevo" label="Apellido Paterno" placeholder="Escribe tu apellido paterno" outlined />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="6">
+                <v-text-field v-model="apellidoMaternoNuevo" label="Apellido Materno" placeholder="Escribe tu apellido materno" outlined />
+              </v-col>
+              <v-col cols="6">
+                <v-text-field v-model="telefonoNuevo" label="Teléfono" placeholder="Escribe tu teléfono" outlined />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="6">
+                <v-text-field v-model="direccionNuevo" label="Dirección" placeholder="Escribe tu dirección" outlined />
+              </v-col>
+              <v-col cols="6">
+                <v-text-field v-model="cpNuevo" label="Código Postal" placeholder="Escribe tu Código Postal" outlined />
+              </v-col>
+            </v-row>
+            <v-select v-model="estadoNuevo" :items="estadosMexico" label="Estado" outlined />
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-row>
             <v-col cols="6">
+              <!-- Botón para agregar usuario -->
               <v-btn block color="primary" @click="agregar">
                 <span class="white--text">Agregar</span>
               </v-btn>
             </v-col>
             <v-col cols="6">
+              <!-- Botón para cancelar el registro -->
               <v-btn block color="red" @click="showNuevo = false">
                 <span class="white--text">Cancelar</span>
               </v-btn>
@@ -87,15 +131,59 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- Diálogo para editar un usuario -->
     <v-dialog v-model="showUpdate" width="400" persistent>
       <v-card>
-        <v-card-title>Modificar Usuario</v-card-title>
+        <v-card-title class="headline font-weight-bold grey--text text--darken-1">
+          Modificar Usuario
+        </v-card-title>
         <v-card-text>
           <v-form ref="formUpdate" v-model="validFormUpdate">
             <!-- Campo de correo electrónico -->
-            <v-text-field v-model="userToUpdate.email" placeholder="Escribe tu correo" type="email" :rules="correo" />
+            <v-text-field
+              v-model="userToUpdate.email"
+              label="Correo electrónico"
+              placeholder="Escribe tu correo"
+              type="email"
+              :rules="correo"
+              outlined
+            />
             <!-- Campo de contraseña -->
-            <v-text-field v-model="userToUpdate.password" placeholder="Escribe tu contraseña" type="password" :rules="password" />
+            <v-text-field
+              v-model="userToUpdate.password"
+              label="Contraseña"
+              placeholder="Escribe tu contraseña"
+              type="password"
+              :rules="password"
+              outlined
+            />
+            <!-- Agregar campos adicionales -->
+            <v-row>
+              <v-col cols="6">
+                <v-text-field v-model="userToUpdate.nombre" label="Nombre" placeholder="Escribe tu nombre" outlined />
+              </v-col>
+              <v-col cols="6">
+                <v-text-field v-model="userToUpdate.apellidoPaterno" label="Apellido Paterno" placeholder="Escribe tu apellido paterno" outlined />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="6">
+                <v-text-field v-model="userToUpdate.apellidoMaterno" label="Apellido Materno" placeholder="Escribe tu apellido materno" outlined />
+              </v-col>
+              <v-col cols="6">
+                <v-text-field v-model="userToUpdate.telefono" label="Teléfono" placeholder="Escribe tu teléfono" outlined />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="6">
+                <v-text-field v-model="userToUpdate.direccion" label="Dirección" placeholder="Escribe tu dirección" outlined />
+              </v-col>
+              <v-col cols="6">
+                <v-text-field v-model="userToUpdate.cp" label="Código Postal" placeholder="Escribe tu Código Postal" outlined />
+              </v-col>
+            </v-row>
+            <v-select v-model="userToUpdate.estado" :items="estadosMexico" label="Estado" outlined />
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -123,16 +211,58 @@ export default {
   layout: 'default',
   data () {
     return {
+      // Estados de Mex
+      estadosMexico: [
+        'Aguascalientes',
+        'Baja California',
+        'Baja California Sur',
+        'Campeche',
+        'Chiapas',
+        'Chihuahua',
+        'Ciudad de México',
+        'Coahuila',
+        'Colima',
+        'Durango',
+        'Guanajuato',
+        'Guerrero',
+        'Hidalgo',
+        'Jalisco',
+        'México',
+        'Michoacán',
+        'Morelos',
+        'Nayarit',
+        'Nuevo León',
+        'Oaxaca',
+        'Puebla',
+        'Querétaro',
+        'Quintana Roo',
+        'San Luis Potosí',
+        'Sinaloa',
+        'Sonora',
+        'Tabasco',
+        'Tamaulipas',
+        'Tlaxcala',
+        'Veracruz',
+        'Yucatán',
+        'Zacatecas'
+      ],
       headers: [
         { text: 'ID', align: 'center', sortable: true, value: 'id' },
         { text: 'Correo electrónico', align: 'center', sortable: true, value: 'email' },
+        // Agrega las nuevas columnas a la tabla
+        { text: 'Nombre', align: 'center', sortable: true, value: 'nombre' },
+        { text: 'Apellido Paterno', align: 'center', sortable: true, value: 'apellidoPaterno' },
+        { text: 'Apellido Materno', align: 'center', sortable: true, value: 'apellidoMaterno' },
+        { text: 'Teléfono', align: 'center', sortable: true, value: 'telefono' },
+        { text: 'Dirección', align: 'center', sortable: true, value: 'direccion' },
+        { text: 'Código Postal', align: 'center', sortable: true, value: 'cPostal' },
+        { text: 'Estado', align: 'center', sortable: true, value: 'estado' },
         { text: 'Acciones', align: 'center', sortable: false, value: 'acciones' }
       ],
       token: null,
       usuarios: [],
       showDelete: false,
       idToDelete: null,
-      showNuevo: false,
       validForm: false,
       email: null,
       passwordUser: null,
@@ -144,7 +274,20 @@ export default {
       ],
       showUpdate: false,
       userToUpdate: {},
-      validFormUpdate: false
+      validFormUpdate: false,
+      // agregar usuario
+      showNuevo: false,
+      validFormNuevo: false,
+      emailNuevo: null,
+      passwordUserNuevo: null,
+      nombreNuevo: null,
+      apellidoPaternoNuevo: null,
+      apellidoMaternoNuevo: null,
+      telefonoNuevo: null,
+      direccionNuevo: null,
+      cpNuevo: null,
+      estadoNuevo: null
+
     }
   },
   mounted () {
@@ -197,12 +340,19 @@ export default {
         })
     },
     agregar () {
-      this.validForm = this.$refs.form.validate()
-      if (this.validForm) {
+      this.validFormNuevo = this.$refs.formNuevo.validate()
+      if (this.validFormNuevo) {
         const sendData = {
           id: uuidv4(),
-          email: this.email,
-          password: this.passwordUser
+          email: this.emailNuevo,
+          password: this.passwordUserNuevo,
+          nombre: this.nombreNuevo,
+          apellidoPaterno: this.apellidoPaternoNuevo,
+          apellidoMaterno: this.apellidoMaternoNuevo,
+          telefono: this.telefonoNuevo,
+          direccion: this.direccionNuevo,
+          cPostal: this.cpNuevo,
+          estado: this.estadoNuevo
         }
         console.log('@@@ data =>', sendData)
         const url = '/signup'
@@ -237,7 +387,14 @@ export default {
         const sendData = {
           id: this.userToUpdate.id,
           email: this.userToUpdate.email,
-          password: this.userToUpdate.password
+          password: this.userToUpdate.password,
+          nombre: this.userToUpdate.nombre,
+          apellidoPaterno: this.userToUpdate.apellidoPaterno,
+          apellidoMaterno: this.userToUpdate.apellidoMaterno,
+          telefono: this.userToUpdate.telefono,
+          direccion: this.userToUpdate.direccion,
+          cPostal: this.userToUpdate.cp,
+          estado: this.userToUpdate.estado
         }
         console.log('🚀 ~ modificar ~ sendData:', sendData)
         this.$axios.defaults.headers.common.Authorization = `Bearer ${this.token}`
@@ -257,7 +414,7 @@ export default {
             }
           })
           .catch((err) => {
-            console.log('🚀 ~ agregar ~ err: ', err)
+            console.log('🚀 ~ modificar ~ err: ', err)
           })
       } else {
         alert('Faltan Datos')

@@ -8,18 +8,6 @@
       fixed
       app
     >
-      <!-- Logo o título de la aplicación -->
-      <v-list-item>
-        <v-list-item-avatar>
-          <v-img src="/logo.png" alt="Logo" />
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title class="headline">
-            Mi Aplicación
-          </v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
       <!-- Elementos de navegación -->
       <v-divider />
       <v-list>

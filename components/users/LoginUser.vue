@@ -32,13 +32,55 @@
     <!-- Diálogo de registro de usuario -->
     <v-dialog v-model="showNuevo" width="400" persistent>
       <v-card>
-        <v-card-title>Registrar Usuario</v-card-title>
+        <v-card-title class="headline font-weight-bold grey--text text--darken-1">
+          Registrar Usuario
+        </v-card-title>
         <v-card-text>
           <v-form ref="formNuevo" v-model="validFormNuevo">
-            Email:
-            <v-text-field v-model="emailNuevo" placeholder="Escribe tu correo" type="email" :rules="correo" />
-            Password:
-            <v-text-field v-model="passwordUserNuevo" placeholder="Escribe tu contraseña" type="password" :rules="password" />
+            <!-- Campo de correo electrónico -->
+            <v-text-field
+              v-model="emailNuevo"
+              label="Email"
+              placeholder="Escribe tu correo"
+              type="email"
+              :rules="correo"
+              outlined
+            />
+            <!-- Campo de contraseña -->
+            <v-text-field
+              v-model="passwordUserNuevo"
+              label="Password"
+              placeholder="Escribe tu contraseña"
+              type="password"
+              :rules="password"
+              outlined
+            />
+            <!-- Agregar campos adicionales -->
+            <v-row>
+              <v-col cols="6">
+                <v-text-field v-model="nombreNuevo" label="Nombre" placeholder="Escribe tu nombre" outlined />
+              </v-col>
+              <v-col cols="6">
+                <v-text-field v-model="apellidoPaternoNuevo" label="Apellido Paterno" placeholder="Escribe tu apellido paterno" outlined />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="6">
+                <v-text-field v-model="apellidoMaternoNuevo" label="Apellido Materno" placeholder="Escribe tu apellido materno" outlined />
+              </v-col>
+              <v-col cols="6">
+                <v-text-field v-model="telefonoNuevo" label="Teléfono" placeholder="Escribe tu teléfono" outlined />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="6">
+                <v-text-field v-model="direccionNuevo" label="Dirección" placeholder="Escribe tu dirección" outlined />
+              </v-col>
+              <v-col cols="6">
+                <v-text-field v-model="cpNuevo" label="Código Postal" placeholder="Escribe tu Código Postal" outlined />
+              </v-col>
+            </v-row>
+            <v-select v-model="estadoNuevo" :items="estadosMexico" label="Estado" outlined />
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -68,6 +110,41 @@ import { v4 as uuidv4 } from 'uuid'
 export default {
   data () {
     return {
+      // Estados de Mex
+      estadosMexico: [
+        'Aguascalientes',
+        'Baja California',
+        'Baja California Sur',
+        'Campeche',
+        'Chiapas',
+        'Chihuahua',
+        'Ciudad de México',
+        'Coahuila',
+        'Colima',
+        'Durango',
+        'Guanajuato',
+        'Guerrero',
+        'Hidalgo',
+        'Jalisco',
+        'México',
+        'Michoacán',
+        'Morelos',
+        'Nayarit',
+        'Nuevo León',
+        'Oaxaca',
+        'Puebla',
+        'Querétaro',
+        'Quintana Roo',
+        'San Luis Potosí',
+        'Sinaloa',
+        'Sonora',
+        'Tabasco',
+        'Tamaulipas',
+        'Tlaxcala',
+        'Veracruz',
+        'Yucatán',
+        'Zacatecas'
+      ],
       // Datos de inicio de sesión
       validForm: false,
       email: null,
@@ -76,6 +153,14 @@ export default {
       validFormNuevo: false,
       emailNuevo: null,
       passwordUserNuevo: null,
+      nombreNuevo: null,
+      apellidoPaternoNuevo: null,
+      apellidoMaternoNuevo: null,
+      telefonoNuevo: null,
+      direccionNuevo: null,
+      cpNuevo: null,
+      estadoNuevo: null,
+
       // Regula la visibilidad del diálogo de registro de usuario
       showNuevo: false,
       // Reglas de validación
@@ -130,7 +215,14 @@ export default {
         const sendData = {
           id: uuidv4(),
           email: this.emailNuevo,
-          password: this.passwordUserNuevo
+          password: this.passwordUserNuevo,
+          nombre: this.nombreNuevo,
+          apellidoPaterno: this.apellidoPaternoNuevo,
+          apellidoMaterno: this.apellidoMaternoNuevo,
+          telefono: this.telefonoNuevo,
+          direccion: this.direccionNuevo,
+          cPostal: this.cpNuevo,
+          estado: this.estadoNuevo
         }
         console.log('@@@ data =>', sendData)
         const url = '/signup'
